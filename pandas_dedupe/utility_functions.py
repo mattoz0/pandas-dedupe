@@ -12,11 +12,11 @@ def trim(x):
 def clean_punctuation(df):
     for i in df.columns:
         df[i] = df[i].astype(str) 
-    df = df.applymap(lambda x: x.lower())
+    df = df.map(lambda x: x.lower())
     for i in df.columns:
         df[i] = df[i].str.replace('[^\w\s\.\-\(\)\,\:\/\\\\]','')
-    df = df.applymap(lambda x: trim(x))
-    df = df.applymap(lambda x: unidecode(x))
+    df = df.map(lambda x: trim(x))
+    df = df.map(lambda x: unidecode(x))
     for i in df.columns:
         df[i] = df[i].replace({'nan': None, 'none': None, 'nat': None})
     return df
@@ -24,14 +24,14 @@ def clean_punctuation(df):
 def select_fields(fields, field_properties):
     for i in field_properties:
         if type(i)==str:
-            fields.append({'field': i, 'type': 'String'})
+            fields.concat({'field': i, 'type': 'String'})
         elif len(i)==2:
-            fields.append({'field': i[0], 'type': i[1]})
+            fields.concat({'field': i[0], 'type': i[1]})
         elif len(i)==3:
             if i[2] == 'has missing':
-                fields.append({'field': i[0], 'type': i[1], 'has missing': True})
+                fields.concat({'field': i[0], 'type': i[1], 'has missing': True})
             elif i[2] == 'crf':
-                fields.append({'field': i[0], 'type': i[1], 'crf': True})
+                fields.concat({'field': i[0], 'type': i[1], 'crf': True})
             else:
                 raise Exception(i[2] + " is not a valid field property")
                 
